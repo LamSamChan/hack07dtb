@@ -18,5 +18,11 @@ namespace off_chain.Models
         public DateTime StartTime { get; set; }
         [Required]
         public DateTime EndTime { get; set; }
+
+        public User User { get; set; }
+        public ICollection<Ticket> Ticket { get; set; }
+        public ICollection<TicketCategory> TicketCategory { get; set; }
+
+
     }
 }

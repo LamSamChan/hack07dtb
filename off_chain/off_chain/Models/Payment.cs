@@ -10,5 +10,7 @@ namespace off_chain.Models
         public DateTime PayTime { get; set; }
         [Required]
         public string Status { get; set; }
+        public User User { get; set; }
+        
     }
 }
