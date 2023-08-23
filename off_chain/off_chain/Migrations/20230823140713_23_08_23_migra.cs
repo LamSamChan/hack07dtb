@@ -6,11 +6,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace off_chain.Migrations
 {
     /// <inheritdoc />
-    public partial class _0823_migra : Migration
+    public partial class _23_08_23_migra : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "TicketCategory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    Area = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketCategory", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
@@ -70,28 +85,6 @@ namespace off_chain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TicketCategory",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    Area = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TicketCategory", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TicketCategory_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Ticket",
                 columns: table => new
                 {
@@ -125,8 +118,7 @@ namespace off_chain.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TicketId = table.Column<int>(type: "int", nullable: false),
-                    PaymentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    PaymentId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -135,22 +127,9 @@ namespace off_chain.Migrations
                         name: "FK_PaymentDetails_Payment_PaymentId",
                         column: x => x.PaymentId,
                         principalTable: "Payment",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_PaymentDetails_Ticket_TicketId",
-                        column: x => x.TicketId,
-                        principalTable: "Ticket",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-            migrationBuilder.AddForeignKey(
-    name: "FK_TicketCategory_Ticket_TicketId",
-    table: "TicketCategory",
-    column: "Id",
-    principalTable: "Ticket",
-    principalColumn: "Id",
-    onDelete: ReferentialAction.NoAction,
-    onUpdate: ReferentialAction.NoAction);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Event_UserId",
@@ -168,11 +147,6 @@ namespace off_chain.Migrations
                 column: "PaymentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentDetails_TicketId",
-                table: "PaymentDetails",
-                column: "TicketId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Ticket_EventId",
                 table: "Ticket",
                 column: "EventId");
@@ -181,11 +155,6 @@ namespace off_chain.Migrations
                 name: "IX_Ticket_TicketCategoryId",
                 table: "Ticket",
                 column: "TicketCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TicketCategory_EventId",
-                table: "TicketCategory",
-                column: "EventId");
         }
 
         /// <inheritdoc />
@@ -195,16 +164,16 @@ namespace off_chain.Migrations
                 name: "PaymentDetails");
 
             migrationBuilder.DropTable(
-                name: "Payment");
-
-            migrationBuilder.DropTable(
                 name: "Ticket");
 
             migrationBuilder.DropTable(
-                name: "TicketCategory");
+                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "Event");
+
+            migrationBuilder.DropTable(
+                name: "TicketCategory");
 
             migrationBuilder.DropTable(
                 name: "User");

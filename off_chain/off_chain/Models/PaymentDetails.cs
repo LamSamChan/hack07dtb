@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace off_chain.Models
 {
@@ -10,7 +11,8 @@ namespace off_chain.Models
         public int Amount { get; set; }
         [Required]
         public string Total { get; set; }
-        public Ticket Ticket { get; set; }
+        [ForeignKey("PaymentId")]
+        public string PaymentId { get; set; }
         public Payment Payment { get; set; }
     }
 }

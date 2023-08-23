@@ -19,11 +19,6 @@ namespace off_chain.DBContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Ticket>()
-        .HasOne(t => t.Event)
-        .WithMany(e => e.Ticket)
-        .HasForeignKey(t => t.Id)
-        .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Event>().ToTable("Event");
 

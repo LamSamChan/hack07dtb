@@ -91,10 +91,8 @@ namespace off_chain.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TicketId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Total")
                         .IsRequired()
@@ -104,14 +102,18 @@ namespace off_chain.Migrations
 
                     b.HasIndex("PaymentId");
 
-                    b.HasIndex("TicketId");
-
                     b.ToTable("PaymentDetails", (string)null);
                 });
 
             modelBuilder.Entity("off_chain.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EventId")
                         .HasColumnType("int");
 
                     b.Property<string>("Seat")
@@ -122,6 +124,8 @@ namespace off_chain.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("TicketCategoryId");
 
@@ -144,15 +148,10 @@ namespace off_chain.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EventId");
 
                     b.ToTable("TicketCategory", (string)null);
                 });
@@ -177,7 +176,7 @@ namespace off_chain.Migrations
             modelBuilder.Entity("off_chain.Models.Event", b =>
                 {
                     b.HasOne("off_chain.Models.User", "User")
-                        .WithMany("Event")
+                        .WithMany("Events")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -188,7 +187,7 @@ namespace off_chain.Migrations
             modelBuilder.Entity("off_chain.Models.Payment", b =>
                 {
                     b.HasOne("off_chain.Models.User", "User")
-                        .WithMany("Payment")
+                        .WithMany("Payments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -199,30 +198,24 @@ namespace off_chain.Migrations
             modelBuilder.Entity("off_chain.Models.PaymentDetails", b =>
                 {
                     b.HasOne("off_chain.Models.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId");
-
-                    b.HasOne("off_chain.Models.Ticket", "Ticket")
-                        .WithMany()
-                        .HasForeignKey("TicketId")
+                        .WithMany("PaymentDetails")
+                        .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Payment");
-
-                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("off_chain.Models.Ticket", b =>
                 {
                     b.HasOne("off_chain.Models.Event", "Event")
-                        .WithMany("Ticket")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany("Tickets")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("off_chain.Models.TicketCategory", "TicketCategory")
-                        .WithMany()
+                        .WithMany("Tickets")
                         .HasForeignKey("TicketCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -232,29 +225,26 @@ namespace off_chain.Migrations
                     b.Navigation("TicketCategory");
                 });
 
-            modelBuilder.Entity("off_chain.Models.TicketCategory", b =>
-                {
-                    b.HasOne("off_chain.Models.Event", "Event")
-                        .WithMany("TicketCategory")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
             modelBuilder.Entity("off_chain.Models.Event", b =>
                 {
-                    b.Navigation("Ticket");
+                    b.Navigation("Tickets");
+                });
 
-                    b.Navigation("TicketCategory");
+            modelBuilder.Entity("off_chain.Models.Payment", b =>
+                {
+                    b.Navigation("PaymentDetails");
+                });
+
+            modelBuilder.Entity("off_chain.Models.TicketCategory", b =>
+                {
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("off_chain.Models.User", b =>
                 {
-                    b.Navigation("Event");
+                    b.Navigation("Events");
 
-                    b.Navigation("Payment");
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

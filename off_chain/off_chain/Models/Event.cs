@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace off_chain.Models
 {
@@ -19,9 +20,11 @@ namespace off_chain.Models
         [Required]
         public DateTime EndTime { get; set; }
 
+        [ForeignKey("UserId")]
+        public int UserId { get; set; }
         public User User { get; set; }
-        public ICollection<Ticket> Ticket { get; set; }
-        public ICollection<TicketCategory> TicketCategory { get; set; }
+
+        public ICollection<Ticket> Tickets { get; set; }
 
 
     }

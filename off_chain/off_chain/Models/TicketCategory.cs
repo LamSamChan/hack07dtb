@@ -12,7 +12,7 @@ namespace off_chain.Models
         public double Price { get; set; }
         [Required]
         public string Area { get; set; }
-        public Event Event { get; set; }
+        public ICollection<Ticket> Tickets { get; set; }
 
 
     }
